@@ -10,4 +10,4 @@ webserver_config.py
 airflow.cfg
 airflow.db
 dbt/target/
-dbt/dbt_packages.yml
+dbt/dbt_packages/
