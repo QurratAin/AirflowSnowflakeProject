@@ -7,12 +7,12 @@ require-dbt-version: ">=1.5.0"
 
 profile: "brave_de_project" # Put your profile here
 
-model-paths: ["brave_de_project/models"]
-analysis-paths: ["brave_de_project/analyses"]
-test-paths: ["brave_de_project/tests"]
-seed-paths: ["brave_de_project/seeds"]
-macro-paths: ["brave_de_project/macros"]
-snapshot-paths: ["brave_de_project/snapshots"]
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
 
 target-path: "target"
 clean-targets:
