@@ -1,0 +1,8 @@
+psycopg2-binary
+virtualenv
+pyArrow
+apache-airflow
+apache-airflow-providers-snowflake
+snowflake-snowpark-python
+snowflake-connector-python
+astronomer-providers[snowflake]
