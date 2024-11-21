@@ -60,6 +60,9 @@ def dbt_with_snowpark_analysis():
             "schema": conn.extra_dejson.get('schema')
         }).create()
 
+        # Set the schema explicitly 
+        session.sql("USE SCHEMA brave_database.project_test").collect()
+        
         return session
 
     # Create the Snowpark analysis function
@@ -91,13 +94,12 @@ def dbt_with_snowpark_analysis():
                         .order_by(desc("total_potential_purchases"), desc("product_category"))
         )
 
-        # Convert the result to a JSON-serializable format 
-        result_list = [row.as_dict() for row in top_products_with_details.collect()] 
+        top_products_with_details.write.mode("overwrite").save_as_table("TOP_PRODUCTS", table_type="transient")
         
         # Close the session 
         session.close()
         
-        return result_list
+        return "Data saved to Snowflake table TOP_PRODUCTS"
 
     @task
     def effective_marketing_channel():
@@ -122,13 +124,13 @@ def dbt_with_snowpark_analysis():
                         .limit(10) 
                         ) 
         
-        # Convert the result to a JSON-serializable format 
-        result_list = [row.as_dict() for row in campaign_stats.collect()] 
-        
+       
+        # Save the DataFrame to a Snowflake table 
+        campaign_stats.write.mode("overwrite").save_as_table("CAMPAIGN_STATS", table_type="transient")
         # Close the session 
         session.close()
         
-        return result_list
+        return "Data saved to Snowflake table CAMPAIGN_STATS"
 
     @task
     def stock_prediction():
@@ -187,13 +189,12 @@ def dbt_with_snowpark_analysis():
         # Filter to show products that need restocking
         inventory_adjustment = inventory_with_demand.filter(col("ADJUSTMENT_NEEDED") > 0).order_by(asc(col("warehouse_id")))
 
-       # Convert the result to a JSON-serializable format 
-        result_list = [row.as_dict() for row in inventory_adjustment.collect()] 
-        
+        inventory_adjustment.write.mode("overwrite").save_as_table("INVENTORY_ADJUSTMENT", table_type="transient")
+
         # Close the session 
         session.close()
         
-        return result_list
+        return "Data saved to Snowflake table INVENTORY_ADJUSTMENT"
 
     products = top_products()
     marketing_channel = effective_marketing_channel()
